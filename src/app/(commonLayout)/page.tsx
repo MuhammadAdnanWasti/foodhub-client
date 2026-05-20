@@ -3,8 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Search, MapPin, Zap, TrendingUp } from 'lucide-react';
 import Navbar from '@/components/shared/Navbar';
+import { CategoriesGrid } from '@/components/modules/home/CategoriesGrid';
+import { RestaurantsGrid } from '@/components/modules/home/RestaurantsGrid';
+import { getCategories, getAllProviders } from '@/services/public';
 
-export default function Home() {
+export default async function Home() {
+  const [categories, providers] = await Promise.all([
+    getCategories(),
+    getAllProviders(),
+  ]);
   return (
     <div className="min-h-screen bg-white">
      
@@ -21,11 +28,11 @@ export default function Home() {
                 Browse thousands of restaurants and get your favorite meals delivered to your doorstep in 30-45 minutes. Quality food, unbeatable prices.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/register">
+                <a href="#cuisines">
                   <Button className="bg-orange-500 hover:bg-orange-600 px-8 py-6 text-lg w-full sm:w-auto">
-                    Order Now
+                    Browse Food
                   </Button>
-                </Link>
+                </a>
                 <Link href="/about-us">
                   <Button variant="outline" className="px-8 py-6 text-lg w-full sm:w-auto">
                     Learn More
@@ -59,6 +66,28 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Cuisines */}
+      <section id="cuisines" className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">Browse by Cuisine</h2>
+            <p className="text-gray-600 mt-1">Pick a cuisine to find all restaurants offering it</p>
+          </div>
+          <CategoriesGrid categories={categories} />
+        </div>
+      </section>
+
+      {/* Restaurants */}
+      <section id="restaurants" className="py-16 px-4 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">Featured Restaurants</h2>
+            <p className="text-gray-600 mt-1">Discover top restaurants delivering near you</p>
+          </div>
+          <RestaurantsGrid providers={providers} />
         </div>
       </section>
 
