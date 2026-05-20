@@ -8,6 +8,8 @@ import {
   SearchIcon,
   StarIcon,
   StoreIcon,
+  ShoppingCartIcon,
+  UserIcon,
 } from "lucide-react"
 
 export type NavItem = {
@@ -76,8 +78,13 @@ const navItemsByRole: Record<Role, NavItem[]> = {
     },
     {
       title: "Browse Restaurants",
-      url: "/restaurants",
+      url: "/#restaurants",
       icon: <SearchIcon />,
+    },
+    {
+      title: "My Cart",
+      url: "/dashboard/cart",
+      icon: <ShoppingCartIcon />,
     },
     {
       title: "My Orders",
@@ -90,8 +97,13 @@ const navItemsByRole: Record<Role, NavItem[]> = {
       icon: <StarIcon />,
     },
     {
+      title: "My Profile",
+      url: "/dashboard/profile",
+      icon: <UserIcon />,
+    },
+    {
       title: "Become a Provider",
-      url: "/dashboard",
+      url: "/dashboard/apply-provider",
       icon: <StoreIcon />,
     },
   ],

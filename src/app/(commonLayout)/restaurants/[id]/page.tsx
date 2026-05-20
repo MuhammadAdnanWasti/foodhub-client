@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Star } from "lucide-react";
 import { getProviderById } from "@/services/public";
+import { getUser } from "@/services/auth";
+import { getMyCart } from "@/services/cart";
 import { RestaurantMenu } from "@/components/modules/home/RestaurantMenu";
 
 type Props = {
@@ -9,11 +12,38 @@ type Props = {
 
 export default async function RestaurantPage({ params }: Props) {
   const { id } = await params;
-  const provider = await getProviderById(id);
+
+  const [provider, user] = await Promise.all([
+    getProviderById(id),
+    getUser(),
+  ]);
 
   if (!provider) notFound();
 
   const mealCount = provider.meals?.length ?? 0;
+
+  // Build cart quantity map if logged in
+  let cartQuantityMap: Record<string, number> = {};
+  if (user) {
+    const cart = await getMyCart();
+    if (cart?.items) {
+      cart.items.forEach((item: { mealId: string; quantity: number }) => {
+        cartQuantityMap[item.mealId] = item.quantity;
+      });
+    }
+  }
+
+  // Compute restaurant-level rating stats from all meal reviews
+  const allReviews = (provider.meals ?? []).flatMap(
+    (m: { reviews?: { rating: number }[] }) => m.reviews ?? []
+  );
+  const totalReviewCount = allReviews.length;
+  const avgRating =
+    totalReviewCount > 0
+      ? (allReviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / totalReviewCount).toFixed(1)
+      : null;
+
+  const restaurantPath = `/restaurants/${id}`;
 
   return (
     <div className="min-h-screen bg-white">
@@ -41,10 +71,16 @@ export default async function RestaurantPage({ params }: Props) {
                 <span>📞</span>
                 {provider.phone}
               </p>
-              <div className="pt-1">
+              <div className="pt-1 flex flex-wrap gap-2">
                 <span className="text-xs bg-orange-100 text-orange-700 font-medium px-2.5 py-1 rounded-full">
                   {mealCount} item{mealCount !== 1 ? "s" : ""} on the menu
                 </span>
+                {avgRating && (
+                  <span className="flex items-center gap-1 text-xs bg-amber-50 text-amber-700 font-medium px-2.5 py-1 rounded-full">
+                    <Star className="size-3 fill-amber-500 text-amber-500" />
+                    {avgRating} ({totalReviewCount} review{totalReviewCount !== 1 ? "s" : ""})
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -54,7 +90,13 @@ export default async function RestaurantPage({ params }: Props) {
       {/* Menu */}
       <div className="max-w-6xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold text-gray-900 mb-8">Menu</h2>
-        <RestaurantMenu meals={provider.meals ?? []} />
+        <RestaurantMenu
+          meals={provider.meals ?? []}
+          cartQuantityMap={cartQuantityMap}
+          currentUserId={user?.id}
+          isLoggedIn={!!user}
+          restaurantPath={restaurantPath}
+        />
       </div>
     </div>
   );
