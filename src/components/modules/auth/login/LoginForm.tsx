@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,18 +18,11 @@ import {
 } from "@/components/ui/card"
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group"
 import { loginUser } from "@/services/auth"
 import { useRouter } from "next/dist/client/components/navigation"
 
@@ -64,73 +58,104 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full sm:max-w-md">
-      <CardHeader>
-        <CardTitle>Login</CardTitle>
-        <CardDescription>
-          Please enter your email and password to log in.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-          <FieldGroup>
-            <Controller
-              name="email"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-email">
-                    Email Address
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id="form-rhf-demo-email"
-                    type="email"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter your email"
-                    autoComplete="email"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-password">
-                    Password
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id="form-rhf-demo-password"
-                    type="password"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-        </form>
-      </CardContent>
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
+    <div className="w-full max-w-md space-y-6">
+      {/* Brand header */}
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-500 shadow-lg shadow-orange-200 mb-1">
+          <span className="text-3xl">🍔</span>
+        </div>
+        <h1 className="text-2xl font-bold text-gray-900">FoodHub</h1>
+        <p className="text-sm text-gray-500">Delicious food, delivered fast</p>
+      </div>
+
+      <Card className="w-full shadow-xl border-0 rounded-2xl overflow-hidden">
+        <CardHeader className="pb-4 pt-6 px-6">
+          <CardTitle className="text-xl font-semibold text-gray-900">Welcome back</CardTitle>
+          <CardDescription className="text-gray-500">
+            Sign in to your account to continue
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="px-6 pb-4">
+          <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-rhf-demo-email">
+                      Email Address
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="form-rhf-demo-email"
+                      type="email"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      className="h-11"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-rhf-demo-password">
+                      Password
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="form-rhf-demo-password"
+                      type="password"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="••••••••"
+                      autoComplete="current-password"
+                      className="h-11"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
+        </CardContent>
+
+        <CardFooter className="flex flex-col gap-3 px-6 pb-6 pt-2">
+          <Button
+            type="submit"
+            form="form-rhf-demo"
+            className="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl shadow-md shadow-orange-100 transition-colors"
+          >
+            Sign In
           </Button>
-          <Button type="submit" form="form-rhf-demo">
-            Submit
+          <Button
+            type="button"
+            variant="ghost"
+            className="w-full h-9 text-sm text-gray-500 hover:text-gray-700"
+            onClick={() => form.reset()}
+          >
+            Clear fields
           </Button>
-        </Field>
-      </CardFooter>
-    </Card>
+          <p className="text-center text-sm text-gray-500">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="font-medium text-orange-500 hover:text-orange-600 hover:underline transition-colors"
+            >
+              Create one
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }

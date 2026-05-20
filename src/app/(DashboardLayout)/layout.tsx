@@ -1,0 +1,71 @@
+import * as React from "react"
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { getUser } from "@/services/auth"
+
+export default async function DashboardLayout({
+  children,
+  admin,
+  provider,
+  customer,
+}: {
+  children: React.ReactNode;
+  admin: React.ReactNode;
+  provider: React.ReactNode;
+  customer: React.ReactNode;
+}) {
+  const user= await getUser();
+  // add right after: const user = await getUser();
+console.log("DECODED USER:", JSON.stringify(user));
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-vertical:h-4 data-vertical:self-auto"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Build Your Application
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          
+          <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" >
+         {children}
+          { user?.role === "ADMIN" && admin}
+          { user?.role === "PROVIDER" && provider }
+          { user?.role === "CUSTOMER" && customer}
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}

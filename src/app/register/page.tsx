@@ -3,9 +3,9 @@ import React from 'react';
 
 const Register = () => {
   return (
-    <div>
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4">
       <RegisterForm />
-    </div>
+    </main>
   );
 };
 

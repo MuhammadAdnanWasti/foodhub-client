@@ -2,7 +2,15 @@
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
-import { jwt } from "zod";
+import { apiFetch } from "@/lib/api";
+
+type DecodedToken = {
+  id: string;
+  email: string;
+  role: "ADMIN" | "PROVIDER" | "CUSTOMER";
+  iat: number;
+  exp: number;
+};
 
 export const loginUser = async (userData: FieldValues   ) => {
     try {
@@ -35,12 +43,23 @@ export const   getUser = async () => {
     const token = storeCookie.get('token')?.value;
     let decodeData = null;
     if(token) {
-        decodeData= await jwtDecode(token);
+        decodeData= jwtDecode<DecodedToken>(token);
         return decodeData;
     }else {
         return null;
     }
 }
+
+export const getMe = async () => {
+    try {
+        const response = await apiFetch("/api/auth/me");
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data?.data ?? null;
+    } catch {
+        return null;
+    }
+};
 
 export const logoutUser = async () => {
     const storeCookie = await cookies();

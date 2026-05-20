@@ -3,11 +3,9 @@ import React from 'react';
 
 const page = () => {
     return (
-        <div className='container mx-auto px-4 py-4'>
-            <h1 className='text-3xl font-bold mb-4'>Login</h1>
+        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4">
             <LoginForm />
-        </div>
-        
+        </main>
     );
 };
 
