@@ -2,15 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, LogOut, LogIn } from 'lucide-react';
+import { Menu, X, LogOut, LogIn, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { get } from 'node:http';
 import { getUser, logoutUser } from '@/services/auth';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const [user, setuser] = useState(false);
-const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ role: string; email: string } | null>(null);
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navLinks = [
@@ -22,21 +20,15 @@ const [user, setUser] = useState(null);
 
   useEffect(() => {
     const getCurrentUser = async () => {
-const userData= await getUser();
-setUser(userData);
-
-
+      const userData = await getUser();
+      setUser(userData);
     };
     getCurrentUser();
-  },[]);
-
-
-
+  }, []);
 
   const handleLogout = () => {
     setUser(null);
     logoutUser();
-    // Add your logout logic here
   };
 
   return (
@@ -62,16 +54,24 @@ setUser(userData);
           </div>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {user ? (
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                className="flex items-center gap-2"
-              >
-                <LogOut size={18} />
-                Logout
-              </Button>
+              <>
+                <Link href="/dashboard">
+                  <Button className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700">
+                    <LayoutDashboard size={18} />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <LogOut size={18} />
+                  Logout
+                </Button>
+              </>
             ) : (
               <>
                 <Link href="/login">
@@ -114,14 +114,22 @@ setUser(userData);
             ))}
             <div className="px-3 py-2 space-y-2">
               {user ? (
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  className="w-full flex items-center gap-2"
-                >
-                  <LogOut size={18} />
-                  Logout
-                </Button>
+                <>
+                  <Link href="/dashboard" className="block">
+                    <Button className="w-full flex items-center gap-2 bg-orange-600 hover:bg-orange-700">
+                      <LayoutDashboard size={18} />
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="w-full flex items-center gap-2"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </Button>
+                </>
               ) : (
                 <>
                   <Link href="/login" className="block">

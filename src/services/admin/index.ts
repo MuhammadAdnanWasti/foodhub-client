@@ -25,3 +25,37 @@ export const rejectProviderApplication = async (id: string) => {
   if (data.success) revalidatePath("/dashboard");
   return data;
 };
+
+export const getAllUsers = async () => {
+  try {
+    const res = await apiFetch("/api/admin/users");
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data ?? [];
+  } catch {
+    return [];
+  }
+};
+
+export const updateUserStatus = async (id: string, status: "ACTIVE" | "SUSPENDED") => {
+  const res = await apiFetch(`/api/admin/users/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+  const data = await res.json();
+  if (data.success) {
+    revalidatePath("/dashboard/users");
+  }
+  return data;
+};
+
+export const getAllOrders = async () => {
+  try {
+    const res = await apiFetch("/api/admin/orders");
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data ?? [];
+  } catch {
+    return [];
+  }
+};

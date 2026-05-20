@@ -33,3 +33,14 @@ export const getProviderById = async (id: string) => {
     return null;
   }
 };
+
+export const getMealById = async (id: string) => {
+  try {
+    const res = await apiFetch(`/api/meals/${id}`);
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json?.data ?? null;
+  } catch {
+    return null;
+  }
+};
