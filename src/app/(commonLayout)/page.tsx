@@ -101,17 +101,7 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Step 1 */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-                  📍
-                </div>
-                <h3 className="text-2xl font-bold mb-3 text-gray-900">1. Enter Your Location</h3>
-                <p className="text-gray-600">
-                  Tell us where you want your food delivered. We'll show you all available restaurants in your area.
-                </p>
-              </CardContent>
-            </Card>
+           
 
             {/* Step 2 */}
             <Card className="shadow-lg hover:shadow-xl transition-shadow">
@@ -119,13 +109,23 @@ export default async function Home() {
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
                   🛒
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-gray-900">2. Browse & Order</h3>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">1. Browse & Order</h3>
                 <p className="text-gray-600">
                   Explore menus, read reviews, and add your favorite items to your cart. Customize as you like!
                 </p>
               </CardContent>
             </Card>
-
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                  📍
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">2. Enter Your Location</h3>
+                <p className="text-gray-600">
+                  Tell us where you want your food delivered. We'll show you all available restaurants in your area.
+                </p>
+              </CardContent>
+            </Card>
             {/* Step 3 */}
             <Card className="shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-8 text-center">
@@ -219,11 +219,7 @@ export default async function Home() {
             Join thousands of happy customers and get started today. Your favorite food is just a few clicks away.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
-              <Button className="bg-white text-orange-600 hover:bg-orange-50 px-8 py-6 text-lg w-full sm:w-auto">
-                Get Started
-              </Button>
-            </Link>
+            
             <Link href="/about-us">
               <Button variant="outline" className="border-white text-orange-600 hover:bg-orange-700 px-8 py-6 text-lg w-full sm:w-auto">
                 Learn More
@@ -236,36 +232,29 @@ export default async function Home() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <h3 className="font-bold text-white mb-4">About</h3>
               <ul className="space-y-2">
                 <li><Link href="/about-us" className="hover:text-white">About Us</Link></li>
-                <li><Link href="#" className="hover:text-white">Careers</Link></li>
-                <li><Link href="#" className="hover:text-white">Press</Link></li>
+                <li><Link href="/#cuisine" className="hover:text-white">Restaurants</Link></li>
+               
               </ul>
             </div>
             <div>
               <h3 className="font-bold text-white mb-4">Support</h3>
               <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-white">Help Center</Link></li>
-                <li><Link href="#" className="hover:text-white">Contact Us</Link></li>
-                <li><Link href="#" className="hover:text-white">FAQs</Link></li>
+                <li><Link href="/login" className="hover:text-white">Login</Link></li>
+                <li><Link href="/register" className="hover:text-white">Register</Link></li>
+                
               </ul>
             </div>
-            <div>
-              <h3 className="font-bold text-white mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-white">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-white">Terms of Service</Link></li>
-                <li><Link href="#" className="hover:text-white">Cookie Policy</Link></li>
-              </ul>
-            </div>
+            
             <div>
               <h3 className="font-bold text-white mb-4">Connect</h3>
               <ul className="space-y-2">
                 <li><Link href="#" className="hover:text-white">Facebook</Link></li>
-                <li><Link href="#" className="hover:text-white">Twitter</Link></li>
+                
                 <li><Link href="#" className="hover:text-white">Instagram</Link></li>
               </ul>
             </div>

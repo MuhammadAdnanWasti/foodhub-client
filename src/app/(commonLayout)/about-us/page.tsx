@@ -215,61 +215,34 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Order?</h2>
-          <p className="text-lg text-orange-100 mb-8">
-            Join thousands of happy customers and discover amazing food from your favorite restaurants.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
-              <Button className="bg-white text-orange-600 hover:bg-orange-50 px-8 py-6 text-lg">
-                Get Started
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="outline" className="border-white text-white hover:bg-orange-700 px-8 py-6 text-lg">
-                Sign In
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <h3 className="font-bold text-white mb-4">About</h3>
               <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-white">About Us</Link></li>
-                <li><Link href="#" className="hover:text-white">Careers</Link></li>
-                <li><Link href="#" className="hover:text-white">Press</Link></li>
+                <li><Link href="/about-us" className="hover:text-white">About Us</Link></li>
+                <li><Link href="/#cuisine" className="hover:text-white">Restaurants</Link></li>
+               
               </ul>
             </div>
             <div>
               <h3 className="font-bold text-white mb-4">Support</h3>
               <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-white">Help Center</Link></li>
-                <li><Link href="#" className="hover:text-white">Contact Us</Link></li>
-                <li><Link href="#" className="hover:text-white">FAQs</Link></li>
+                <li><Link href="/login" className="hover:text-white">Login</Link></li>
+                <li><Link href="/register" className="hover:text-white">Register</Link></li>
+                
               </ul>
             </div>
-            <div>
-              <h3 className="font-bold text-white mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-white">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-white">Terms of Service</Link></li>
-                <li><Link href="#" className="hover:text-white">Cookie Policy</Link></li>
-              </ul>
-            </div>
+            
             <div>
               <h3 className="font-bold text-white mb-4">Connect</h3>
               <ul className="space-y-2">
                 <li><Link href="#" className="hover:text-white">Facebook</Link></li>
-                <li><Link href="#" className="hover:text-white">Twitter</Link></li>
+                
                 <li><Link href="#" className="hover:text-white">Instagram</Link></li>
               </ul>
             </div>

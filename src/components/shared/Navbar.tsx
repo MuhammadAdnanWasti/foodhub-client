@@ -14,8 +14,7 @@ const Navbar = () => {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/about-us', label: 'About Us' },
-    { href: '/menu', label: 'Menu' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/#cuisine', label: 'Restaurants' },
   ];
 
   useEffect(() => {
