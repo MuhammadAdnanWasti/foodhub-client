@@ -16,7 +16,7 @@ export default function AboutPage() {
               🍽️
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">CodeRabbit Food</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-center mb-4"> FoodHub</h1>
           <p className="text-xl text-center text-orange-100 max-w-2xl mx-auto">
             Delivering delicious meals to your doorstep, one order at a time. Experience the future of food delivery.
           </p>
