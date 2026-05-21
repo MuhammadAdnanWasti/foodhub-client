@@ -1,11 +1,124 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Search, MapPin, Zap, TrendingUp } from 'lucide-react';
+import { Search, MapPin, Zap, TrendingUp, Star, Flame } from 'lucide-react';
 import Navbar from '@/components/shared/Navbar';
 import { CategoriesGrid } from '@/components/modules/home/CategoriesGrid';
 import { RestaurantsGrid } from '@/components/modules/home/RestaurantsGrid';
 import { getCategories, getAllProviders } from '@/services/public';
+
+type ProviderMeal = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  reviews: { rating: number }[];
+  provider: { id: string; restaurantName: string };
+};
+
+function isValidUrl(src: string | undefined | null) {
+  return src && (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/'));
+}
+
+function PopularPicksSection({ providers }: { providers: { id: string; restaurantName: string; meals: ProviderMeal[] }[] }) {
+  // Flatten all meals, attach restaurant name, compute avg rating, take top 8
+  const allMeals: (ProviderMeal & { avgRating: number; restaurantName: string; providerId: string })[] = [];
+
+  for (const p of providers) {
+    for (const m of p.meals ?? []) {
+      const reviews = m.reviews ?? [];
+      const avgRating = reviews.length
+        ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
+        : 0;
+      allMeals.push({ ...m, avgRating, restaurantName: p.restaurantName, providerId: p.id });
+    }
+  }
+
+  // Sort by avgRating desc, then take top 8 (fall back to first 8 if no reviews)
+  const picks = [...allMeals]
+    .sort((a, b) => b.avgRating - a.avgRating || b.price - a.price)
+    .slice(0, 8);
+
+  if (picks.length === 0) return null;
+
+  return (
+    <section className="py-16 px-4 bg-white">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Flame className="size-5 text-orange-500" />
+              <span className="text-xs font-semibold uppercase tracking-widest text-orange-500">Trending Now</span>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900">Popular Picks</h2>
+            <p className="text-gray-600 mt-1">Highest-rated dishes loved by our customers</p>
+          </div>
+          <Link href="/#restaurants">
+            <Button variant="outline" className="hidden sm:flex items-center gap-2 border-orange-200 text-orange-600 hover:bg-orange-50">
+              View all restaurants →
+            </Button>
+          </Link>
+        </div>
+
+        {/* Horizontal scroll strip */}
+        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {picks.map((meal) => (
+            <Link
+              key={meal.id}
+              href={`/restaurants/${meal.providerId}`}
+              className="snap-start shrink-0 w-52 rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-lg hover:border-orange-100 transition-all group"
+            >
+              {/* Image */}
+              <div className="h-36 bg-gradient-to-br from-orange-50 to-amber-50 relative overflow-hidden flex items-center justify-center">
+                {isValidUrl(meal.image) ? (
+                  <Image
+                    src={meal.image}
+                    alt={meal.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="208px"
+                  />
+                ) : (
+                  <span className="text-4xl">🍽️</span>
+                )}
+                {/* Rating badge */}
+                {meal.avgRating > 0 && (
+                  <div className="absolute top-2 right-2 flex items-center gap-0.5 bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5 shadow-sm">
+                    <Star className="size-3 fill-amber-400 text-amber-400" />
+                    <span className="text-xs font-semibold text-gray-800">{meal.avgRating.toFixed(1)}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="p-3 space-y-1">
+                <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1 group-hover:text-orange-600 transition-colors">
+                  {meal.name}
+                </h4>
+                <p className="text-xs text-gray-400 line-clamp-1">{meal.restaurantName}</p>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-sm font-bold text-orange-500">${meal.price.toFixed(2)}</span>
+                  <span className="text-xs text-gray-400 bg-gray-50 rounded-full px-2 py-0.5">Order →</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile "view all" */}
+        <div className="mt-4 text-center sm:hidden">
+          <Link href="/#restaurants">
+            <Button variant="outline" className="border-orange-200 text-orange-600 hover:bg-orange-50">
+              View all restaurants →
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default async function Home() {
   const [categories, providers] = await Promise.all([
@@ -91,6 +204,9 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Popular Picks */}
+      <PopularPicksSection providers={providers} />
+
       {/* How It Works */}
       <section className="py-20 md:py-32 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
@@ -122,7 +238,7 @@ export default async function Home() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-gray-900">2. Enter Your Location</h3>
                 <p className="text-gray-600">
-                  Tell us where you want your food delivered. We'll show you all available restaurants in your area.
+                  Tell us where you want your food delivered. We&apos;ll show you all available restaurants in your area.
                 </p>
               </CardContent>
             </Card>
