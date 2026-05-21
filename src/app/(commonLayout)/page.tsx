@@ -63,12 +63,15 @@ function PopularPicksSection({ providers }: { providers: { id: string; restauran
         </div>
 
         {/* Horizontal scroll strip */}
-        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div
+          className="flex gap-4 overflow-x-auto pb-3"
+          style={{ scrollbarWidth: "thin", scrollbarColor: "#fed7aa #f3f4f6" }}
+        >
           {picks.map((meal) => (
             <Link
               key={meal.id}
               href={`/restaurants/${meal.providerId}`}
-              className="snap-start shrink-0 w-52 rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-lg hover:border-orange-100 transition-all group"
+              className="shrink-0 w-52 rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-lg hover:border-orange-100 transition-all group"
             >
               {/* Image */}
               <div className="h-36 bg-gradient-to-br from-orange-50 to-amber-50 relative overflow-hidden flex items-center justify-center">
