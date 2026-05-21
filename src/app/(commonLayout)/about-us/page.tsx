@@ -30,7 +30,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">Our Story</h2>
               <p className="text-gray-700 mb-4 leading-relaxed">
-                Founded in 2024, CodeRabbit Food started with a simple mission: to connect hungry customers with their favorite local restaurants. We believe that good food should be accessible to everyone, anytime, anywhere.
+                Founded in 2024, FoodHub started with a simple mission: to connect hungry customers with their favorite local restaurants. We believe that good food should be accessible to everyone, anytime, anywhere.
               </p>
               <p className="text-gray-700 mb-4 leading-relaxed">
                 Our team of passionate food enthusiasts and tech experts work tirelessly to bring you the best food delivery experience. From small local eateries to premium restaurants, we partner with the finest establishments in your area.
