@@ -37,7 +37,8 @@ const schema = z.object({
   categoryName: z.string().min(1, "Please select a category"),
 })
 
-type FormValues = z.infer<typeof schema>
+type FormInputValues = z.input<typeof schema>
+type FormValues = z.output<typeof schema>
 
 type Category = { id: string; name: string }
 
@@ -50,7 +51,7 @@ type Props = {
 
 export function MealForm({ mode, mealId, categories, defaultValues }: Props) {
   const router = useRouter()
-  const form = useForm<FormValues>({
+  const form = useForm<FormInputValues, unknown, FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: defaultValues?.name ?? "",
@@ -149,6 +150,8 @@ export function MealForm({ mode, mealId, categories, defaultValues }: Props) {
                     step="0.01"
                     min="0"
                     placeholder="9.99"
+                    value={String(field.value ?? "")}
+                    onChange={(event) => field.onChange(event.target.value)}
                     className="h-11"
                     aria-invalid={fieldState.invalid}
                   />
