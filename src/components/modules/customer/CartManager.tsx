@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react"
 import Link from "next/link"
@@ -40,7 +39,6 @@ export function CartManager({ initialItems }: CartManagerProps) {
   const [deliveryAddress, setDeliveryAddress] = useState("")
   const [checkoutLoading, setCheckoutLoading] = useState(false)
   const [isPending, startTransition] = useTransition()
-  const router = useRouter()
 
   const subtotal = items.reduce((s, i) => s + i.meal.price * i.quantity, 0)
   const totalQty = items.reduce((s, i) => s + i.quantity, 0)
@@ -99,17 +97,14 @@ export function CartManager({ initialItems }: CartManagerProps) {
     setCheckoutLoading(true)
     try {
       const result = await checkoutFromCart(deliveryAddress.trim())
-      if (result.success) {
-        toast.success("Order placed successfully!")
-        setItems([])
-        setDeliveryAddress("")
-        router.push("/dashboard/orders")
-        router.refresh()
-      } else {
-        toast.error(result.message || "Failed to place order")
+      if (result.success && result.data?.checkoutUrl) {
+        sessionStorage.setItem("pendingOrderId", result.data.orderId)
+        window.location.href = result.data.checkoutUrl
+        return
       }
+      toast.error(result.message || "Failed to start checkout")
     } catch {
-      toast.error("An error occurred while placing your order")
+      toast.error("An error occurred while starting checkout")
     } finally {
       setCheckoutLoading(false)
     }
@@ -252,7 +247,7 @@ export function CartManager({ initialItems }: CartManagerProps) {
               disabled={checkoutLoading || items.length === 0}
               className="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl"
             >
-              {checkoutLoading ? "Placing order..." : `Place Order • $${grandTotal.toFixed(2)}`}
+              {checkoutLoading ? "Redirecting to payment..." : `Proceed to Payment • $${grandTotal.toFixed(2)}`}
             </Button>
           </form>
         </div>

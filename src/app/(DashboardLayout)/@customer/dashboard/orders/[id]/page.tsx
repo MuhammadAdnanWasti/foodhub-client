@@ -2,16 +2,9 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getMyOrderById } from "@/services/order"
 import { CancelOrderButton } from "@/components/modules/customer/CancelOrderButton"
+import { CANCELLABLE_STATUSES, STATUS_BADGE, STATUS_LABEL } from "@/types/order"
 
 const TIMELINE_STEPS = ["PLACED", "PREPARING", "READY", "DELIVERED"]
-
-const statusBadge: Record<string, string> = {
-  PLACED: "bg-blue-100 text-blue-700",
-  PREPARING: "bg-yellow-100 text-yellow-700",
-  READY: "bg-green-100 text-green-700",
-  DELIVERED: "bg-gray-100 text-gray-600",
-  CANCELLED: "bg-red-100 text-red-600",
-}
 
 type Props = {
   params: Promise<{ id: string }>
@@ -24,7 +17,9 @@ export default async function CustomerOrderDetailPage({ params }: Props) {
   if (!order) notFound()
 
   const isCancelled = order.status === "CANCELLED"
-  const currentStepIndex = isCancelled ? -1 : TIMELINE_STEPS.indexOf(order.status)
+  const isPendingPayment = order.status === "PENDING_PAYMENT"
+  const currentStepIndex = isCancelled || isPendingPayment ? -1 : TIMELINE_STEPS.indexOf(order.status)
+  const canCancel = CANCELLABLE_STATUSES.includes(order.status)
 
   return (
     <div className="p-6 space-y-6 max-w-3xl">
@@ -54,15 +49,21 @@ export default async function CustomerOrderDetailPage({ params }: Props) {
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">
-          <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusBadge[order.status] ?? "bg-gray-100 text-gray-600"}`}>
-            {order.status}
+          <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${STATUS_BADGE[order.status] ?? "bg-gray-100 text-gray-600"}`}>
+            {STATUS_LABEL[order.status] ?? order.status}
           </span>
-          {order.status === "PLACED" && <CancelOrderButton orderId={order.id} />}
+          {canCancel && <CancelOrderButton orderId={order.id} />}
         </div>
       </div>
 
+      {isPendingPayment && (
+        <div className="rounded-2xl border border-amber-100 bg-amber-50 p-4 text-sm text-amber-800">
+          Payment pending — your order will be confirmed once payment is complete. You can cancel this order if you did not finish checkout.
+        </div>
+      )}
+
       {/* Timeline */}
-      {!isCancelled ? (
+      {!isCancelled && !isPendingPayment ? (
         <div className="rounded-2xl border border-gray-100 p-5 space-y-2">
           <h2 className="text-sm font-semibold text-gray-700 mb-4">Order Timeline</h2>
           <div className="flex items-center gap-0">
@@ -95,11 +96,11 @@ export default async function CustomerOrderDetailPage({ params }: Props) {
             })}
           </div>
         </div>
-      ) : (
+      ) : isCancelled ? (
         <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-700 font-medium">
           This order was cancelled.
         </div>
-      )}
+      ) : null}
 
       {/* Delivery address */}
       <div className="rounded-2xl border border-gray-100 p-4 text-sm">

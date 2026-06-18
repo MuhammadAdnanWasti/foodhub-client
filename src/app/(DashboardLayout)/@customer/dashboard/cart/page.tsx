@@ -10,7 +10,7 @@ export default async function CustomerCartPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">My Cart</h1>
         <p className="text-sm text-gray-500 mt-1">
-          Review your items and place your order
+          Review your items and proceed to secure payment
         </p>
       </div>
       <CartManager initialItems={items} />

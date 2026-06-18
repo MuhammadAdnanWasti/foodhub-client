@@ -1,6 +1,7 @@
 "use server"
 import { revalidatePath } from "next/cache";
 import { apiFetch } from "@/lib/api";
+import type { CheckoutSessionResponse } from "@/types/order";
 
 export const getMyOrders = async () => {
     try {
@@ -29,6 +30,7 @@ export const cancelOrder = async (id: string) => {
     const data = await res.json();
     if (data.success) {
         revalidatePath("/dashboard/orders");
+        revalidatePath(`/dashboard/orders/${id}`);
     }
     return data;
 };
@@ -41,7 +43,15 @@ export const checkoutFromCart = async (deliveryAddress: string) => {
     const data = await res.json();
     if (data.success) {
         revalidatePath("/dashboard/orders");
-        revalidatePath("/dashboard/cart");
     }
-    return data;
+    return data as {
+        success: boolean;
+        message: string;
+        data?: CheckoutSessionResponse;
+    };
+};
+
+export const revalidateAfterPayment = async () => {
+    revalidatePath("/dashboard/orders");
+    revalidatePath("/dashboard/cart");
 };

@@ -7,39 +7,12 @@ import { toast } from "sonner"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { cancelOrder } from "@/services/order"
-
-const statusBadge: Record<string, string> = {
-  PLACED: "bg-blue-100 text-blue-700",
-  PREPARING: "bg-yellow-100 text-yellow-700",
-  READY: "bg-green-100 text-green-700",
-  DELIVERED: "bg-gray-100 text-gray-600",
-  CANCELLED: "bg-red-100 text-red-600",
-}
-
-const statusLabel: Record<string, string> = {
-  PLACED: "Placed",
-  PREPARING: "Preparing",
-  READY: "Ready",
-  DELIVERED: "Delivered",
-  CANCELLED: "Cancelled",
-}
-
-type OrderItem = {
-  id: string
-  quantity: number
-  unitPrice: number
-  meal: { name: string }
-}
-
-type Order = {
-  id: string
-  status: string
-  totalPrice: number
-  deliveryAddress: string
-  createdAt: string
-  provider: { restaurantName: string }
-  orderItems: OrderItem[]
-}
+import {
+  CANCELLABLE_STATUSES,
+  STATUS_BADGE,
+  STATUS_LABEL,
+  type Order,
+} from "@/types/order"
 
 export function CustomerOrdersList({ orders }: { orders: Order[] }) {
   if (orders.length === 0) {
@@ -70,6 +43,8 @@ function OrderCard({ order }: { order: Order }) {
   const [status, setStatus] = useState(order.status)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+
+  const canCancel = CANCELLABLE_STATUSES.includes(status as (typeof CANCELLABLE_STATUSES)[number])
 
   const handleCancel = async () => {
     if (!confirm("Cancel this order?")) return
@@ -112,11 +87,11 @@ function OrderCard({ order }: { order: Order }) {
           </div>
           <div className="flex flex-col items-end gap-2">
             <span
-              className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusBadge[status] ?? "bg-gray-100 text-gray-600"}`}
+              className={`text-xs font-medium px-2.5 py-1 rounded-full ${STATUS_BADGE[status] ?? "bg-gray-100 text-gray-600"}`}
             >
-              {statusLabel[status] ?? status}
+              {STATUS_LABEL[status] ?? status}
             </span>
-            {status === "PLACED" && (
+            {canCancel && (
               <Button
                 size="sm"
                 variant="outline"
